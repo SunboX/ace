@@ -85,3 +85,24 @@
   position: absolute;
   z-index: 1;
 }
+
+.ace_gutter-layer .ace_gutter-folding {
+    display: inline-block;
+    height: 100%;
+    padding-right: 15px;
+    margin-right: -4px;
+    background-repeat: repeat-y;
+    background-position: right center;
+}
+.ace_gutter-layer .ace_gutter-folding.ace_folding-open {
+    background-image: url("lib/ace/icons/code_folding/open.png");
+}
+.ace_gutter-layer .ace_gutter-folding.ace_folding-closed {
+    background-image: url("lib/ace/icons/code_folding/closed.png");
+}
+.ace_gutter-layer .ace_gutter-folding.ace_folding-vertical-line {
+    background-image: url("lib/ace/icons/code_folding/vertical.png");
+}
+.ace_gutter-layer .ace_gutter-folding.ace_folding-end {
+    background-image: url("lib/ace/icons/code_folding/end.png");
+}

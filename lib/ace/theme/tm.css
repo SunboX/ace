@@ -16,10 +16,12 @@
 .ace-tm .ace_gutter-layer {
   width: 100%;
   text-align: right;
+  line-height: 12px;
 }
 
 .ace-tm .ace_gutter-layer .ace_gutter-cell {
   padding-right: 6px;
+  vertical-align: middle;
 }
 
 .ace-tm .ace_editor .ace_printMargin {
