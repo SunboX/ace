@@ -91,7 +91,7 @@
     height: 100%;
     padding-right: 15px;
     margin-right: -4px;
-    background-repeat: repeat-y;
+    background-repeat: no-repeat;
     background-position: right center;
 }
 .ace_gutter-layer .ace_gutter-folding.ace_folding-open {
@@ -102,6 +102,7 @@
 }
 .ace_gutter-layer .ace_gutter-folding.ace_folding-vertical-line {
     background-image: url("lib/ace/icons/code_folding/vertical.png");
+    background-repeat: repeat-y;
 }
 .ace_gutter-layer .ace_gutter-folding.ace_folding-end {
     background-image: url("lib/ace/icons/code_folding/end.png");
