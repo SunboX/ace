@@ -35,93 +35,25 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-// TODO: Yuck! A global function
-var setupPlugins = function(config, callback) {
-    config = config || {};
-    if (!config.pluginDirs) {
-        config.pluginDirs = {};
+require({
+    paths: {
+        demo: "../demo",
+        ace: "../lib/ace",
+        cockpit: "../support/cockpit/lib/cockpit",
+        pilot: "../support/pilot/lib/pilot"
     }
-    // config.pluginDirs["../lib"] = {
-    //     packages: ["ace"]
-    // };
-    config.pluginDirs["../plugins"] = {
-        packages: ["pilot", "cockpit"]
-    };
+});
 
-    var knownPlugins = [];
+var deps = [ "pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings",
+             "pilot/environment", "demo/demo" ];
 
-    var pluginPackageInfo = {
-        "../lib": [
-            {
-                name: "ace",
-                lib: "."
-            }
-        ]
-    };
-
-    var paths = {};
-    var i;
-    var location;
-
-    // we need to ensure that the core plugin directory is loaded first
-    var pluginDirs = [];
-    var pluginDir;
-    for (pluginDir in config.pluginDirs) {
-        pluginDirs.push(pluginDir);
-    }
-    pluginDirs.sort(function(a, b) {
-        if (a == "../plugins") {
-            return -1;
-        } else if (b == "../plugins") {
-            return 1;
-        } else if (a < b) {
-            return -1;
-        } else if (b < a) {
-            return 1;
-        } else {
-            return 0;
-        }
-    });
-
-    // set up RequireJS to know that our plugins all have a main module called "index"
-    for (var dirNum = 0; dirNum < pluginDirs.length; dirNum++) {
-        pluginDir = pluginDirs[dirNum];
-        var dirInfo = config.pluginDirs[pluginDir];
-        if (dirInfo.packages) {
-            location = pluginPackageInfo[pluginDir];
-            if (location === undefined) {
-                pluginPackageInfo[pluginDir] = location = [];
-            }
-            var packages = dirInfo.packages;
-            for (i = 0; i < packages.length; i++) {
-                location.push({
-                    name: packages[i],
-                    main: "index",
-                    lib: "."
-                });
-                knownPlugins.push(packages[i]);
-            }
-        }
-        if (dirInfo.singleFiles) {
-            for (i = 0; i < dirInfo.singleFiles.length; i++) {
-                var pluginName = dirInfo.singleFiles[i];
-                paths[pluginName] = pluginDir + "/" + pluginName;
-                knownPlugins.push(pluginName);
-            }
-        }
-    }
-    require({
-        packagePaths: pluginPackageInfo,
-        paths: paths
-    });
-    require(["pilot/fixoldbrowsers", "pilot/plugin_manager", "pilot/settings"], function() {
-        var pluginsModule = require("pilot/plugin_manager");
-        var settings = require("pilot/settings").settings;
-        var catalog = pluginsModule.catalog;
-        catalog.registerPlugins(knownPlugins).then(function() {
-            if (callback) {
-                callback(pluginsModule, settings);
-            }
+var plugins = [ "pilot/index", "cockpit/index", "ace/defaults" ];
+require(deps, function() {
+    var catalog = require("pilot/plugin_manager").catalog;
+    catalog.registerPlugins(plugins).then(function() {
+        var env = require("pilot/environment").create();
+        catalog.startupPlugins({ env: env }).then(function() {
+            require("demo/demo").launch(env);
         });
     });
-};
+});
